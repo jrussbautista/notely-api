@@ -1,8 +1,5 @@
-import * as dotenv from 'dotenv';
 import app from './app';
 import { connectDb } from './db/connect-db';
-
-dotenv.config();
 
 const PORT = process.env.NODE_ENV || process.env.PORT;
 
