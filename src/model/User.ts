@@ -5,6 +5,7 @@ import { User as UserType } from '../types/User';
 
 type UserWithPassword = UserType & {
   password?: string;
+  matchesPassword(password: string): boolean;
 };
 
 type UserDocument = Document & UserWithPassword & {};

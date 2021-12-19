@@ -23,7 +23,7 @@ describe('POST /auth/signup', () => {
     expect(response.body).toMatchObject({ name: testUser.name, email: testUser.email });
   });
 
-  test('should validates request body', async () => {
+  test('should validates signup request body', async () => {
     const response = await request(app).post('/api/auth/signup').send({});
     expect(response.body).toMatchObject({
       message: 'The given data was invalid',
@@ -34,5 +34,39 @@ describe('POST /auth/signup', () => {
   test('should return 422 status code when email is already taken', async () => {
     const response = await request(app).post('/api/auth/signup').send(user1);
     expect(response.statusCode).toBe(422);
+  });
+});
+
+describe('POST /auth/login', () => {
+  test('should login existing user', async () => {
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({ email: user1.email, password: user1.password });
+
+    const payload = { ...user1 };
+    delete payload.password;
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(payload);
+  });
+
+  test('should not login non existing user', async () => {
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({ email: user1.email, password: 'wrongPassword' });
+
+    expect(response.status).toBe(401);
+    expect(response.body).toMatchObject({
+      message: 'Email or Password is incorrect.',
+    });
+  });
+
+  test('should validate login request body', async () => {
+    const response = await request(app).post('/api/auth/login').send({});
+
+    expect(response.body).toMatchObject({
+      message: 'The given data was invalid',
+    });
+    expect(response.status).toBe(422);
   });
 });
