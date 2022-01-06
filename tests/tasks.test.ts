@@ -22,9 +22,21 @@ describe('GET /tasks', () => {
 });
 
 describe('POST /tasks', () => {
-  test('should create new task when all fields are valid', async () => {});
+  test('should create new task when all fields are valid', async () => {
+    const task = {
+      title: 'New task',
+      description: 'new task desc',
+    };
+    const token = generateUserToken(user1._id);
+    const response = await request(app)
+      .post(`/api/tasks`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(task);
+    expect(response.status).toBe(201);
+    expect(response.body).toMatchObject({ task });
+  });
 
-  test('should validates create tasks request body', async () => {});
+  test('should validates create task request body', async () => {});
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
     const response = await request(app).get(`/api/tasks`);
@@ -60,8 +72,8 @@ describe('GET /tasks/id', () => {
     const response = await request(app)
       .get(`/api/tasks/${id}`)
       .set('Authorization', `Bearer ${token}`);
-    expect(response.statusCode).toBe(404);
-    expect(response.body).toMatchObject({ message: 'Task not found.' });
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toMatchObject({ message: 'Unauthorized.' });
   });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
@@ -72,28 +84,84 @@ describe('GET /tasks/id', () => {
 });
 
 describe('DELETE /tasks/id', () => {
-  test('should delete user task', async () => {});
+  test('should delete user task', async () => {
+    const id = user1Task1._id;
+    const token = generateUserToken(user1._id);
+    const response = await request(app)
+      .delete(`/api/tasks/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.statusCode).toBe(204);
+  });
 
-  test('should return 404 status and not found message when task is not found', async () => {});
+  test('should return 404 status and not found message when task is not found', async () => {
+    const id = new mongoose.Types.ObjectId();
+    const token = generateUserToken(user1._id);
+    const response = await request(app)
+      .delete(`/api/tasks/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.statusCode).toBe(404);
+  });
 
-  test('should not delete other user tasks', async () => {});
+  test('should not delete other user tasks', async () => {
+    const id = user1Task1._id;
+    const token = generateUserToken(user2._id);
+    const response = await request(app)
+      .delete(`/api/tasks/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toMatchObject({ message: 'Unauthorized.' });
+  });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
-    const response = await request(app).get(`/api/tasks`);
+    const id = new mongoose.Types.ObjectId();
+    const response = await request(app).delete(`/api/tasks/${id}`);
     expect(response.status).toBe(401);
     expect(response.body).toMatchObject({ message: 'Unauthorized.' });
   });
 });
 
 describe('PUT /tasks/id', () => {
-  test('should update user task', async () => {});
+  test('should update user task', async () => {
+    const task = {
+      title: 'New task',
+      description: 'new task desc',
+      completed: true,
+    };
+    const token = generateUserToken(user1._id);
+    const response = await request(app)
+      .put(`/api/tasks/${user1Task1._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(task);
+    expect(response.status).toBe(202);
+    expect(response.body).toMatchObject({ task });
+  });
 
-  test('should return 404 status and not found message when task is not found', async () => {});
+  test('should validates update task request body', async () => {});
 
-  test('should not update other user tasks', async () => {});
+  test('should return 404 status and not found message when task is not found', async () => {
+    const id = new mongoose.Types.ObjectId();
+    const token = generateUserToken(user1._id);
+    const response = await request(app)
+      .put(`/api/tasks/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({ message: 'Task not found.' });
+  });
+
+  test('should not update other user tasks', async () => {
+    const id = user1Task1._id;
+    const token = generateUserToken(user2._id);
+    const response = await request(app)
+      .put(`/api/tasks/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toMatchObject({ message: 'Unauthorized.' });
+  });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
-    const response = await request(app).get(`/api/tasks`);
+    const id = user1Task1._id;
+    const response = await request(app).get(`/api/tasks/${id}`);
     expect(response.status).toBe(401);
     expect(response.body).toMatchObject({ message: 'Unauthorized.' });
   });
