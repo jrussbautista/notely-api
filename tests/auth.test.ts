@@ -20,7 +20,7 @@ describe('POST /auth/signup', () => {
     expect(user).not.toBeNull();
 
     expect(response.status).toBe(201);
-    expect(response.body).toMatchObject({ name: testUser.name, email: testUser.email });
+    expect(response.body).toMatchObject({ user: { name: testUser.name, email: testUser.email } });
   });
 
   test('should validates signup request body', async () => {
@@ -47,7 +47,7 @@ describe('POST /auth/login', () => {
     delete payload.password;
 
     expect(response.status).toBe(200);
-    expect(response.body).toMatchObject(payload);
+    expect(response.body).toMatchObject({ user: payload });
   });
 
   test('should not login non existing user', async () => {

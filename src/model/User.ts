@@ -5,12 +5,14 @@ import { User as UserType } from '../types/User';
 
 type UserWithPassword = UserType & {
   password?: string;
-  matchesPassword(password: string): boolean;
 };
 
-type UserDocument = Document & UserWithPassword & {};
+export type UserDocument = Document &
+  UserWithPassword & {
+    matchesPassword(password: string): boolean;
+  };
 
-const UserSchema = new Schema<UserWithPassword>(
+const UserSchema = new Schema<UserDocument>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -39,4 +41,4 @@ UserSchema.methods.matchesPassword = function (password: string) {
   return bcrypt.compareSync(password, this.password);
 };
 
-export const User = model<UserWithPassword>('User', UserSchema);
+export const User = model<UserDocument>('User', UserSchema);
