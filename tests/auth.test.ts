@@ -2,7 +2,7 @@ import request from 'supertest';
 
 import app from '../src/app';
 import { User } from '../src/model/User';
-import { setupTestDatabase, user1 } from './fixtures/db';
+import { setupTestDatabase, generateUserToken, user1 } from './fixtures/db';
 
 beforeEach(setupTestDatabase);
 
@@ -68,5 +68,24 @@ describe('POST /auth/login', () => {
       message: 'The given data was invalid',
     });
     expect(response.status).toBe(422);
+  });
+});
+
+describe('POST /auth/me', () => {
+  test('should get currentUser data if token exists', async () => {
+    const token = generateUserToken(user1._id);
+    const response = await request(app).get('/api/auth/me').set('Authorization', `Bearer ${token}`);
+
+    const user = { ...user1 };
+    delete user.password;
+
+    expect(response.body).toMatchObject(user);
+    expect(response.status).toBe(200);
+  });
+
+  test('should not get currentUser data if token not exists', async () => {
+    const response = await request(app).get('/api/auth/me');
+    expect(response.status).toBe(401);
+    expect(response.body).toMatchObject({ message: 'Unauthorized.' });
   });
 });
