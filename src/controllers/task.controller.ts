@@ -63,6 +63,8 @@ export const deleteTask = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Unauthorized.' });
     }
 
+    await task.remove();
+
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: 'Unexpected error occurred' });

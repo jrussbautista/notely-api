@@ -36,7 +36,17 @@ describe('POST /tasks', () => {
     expect(response.body).toMatchObject({ task });
   });
 
-  test('should validates create task request body', async () => {});
+  test('should validates create task request body', async () => {
+    const token = generateUserToken(user1._id);
+    const response = await request(app)
+      .post('/api/tasks')
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+    expect(response.status).toBe(422);
+    expect(response.body).toMatchObject({
+      message: 'The given data was invalid',
+    });
+  });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
     const response = await request(app).get(`/api/tasks`);
@@ -87,10 +97,16 @@ describe('DELETE /tasks/id', () => {
   test('should delete user task', async () => {
     const id = user1Task1._id;
     const token = generateUserToken(user1._id);
-    const response = await request(app)
+    const deleteResponse = await request(app)
       .delete(`/api/tasks/${id}`)
       .set('Authorization', `Bearer ${token}`);
-    expect(response.statusCode).toBe(204);
+    expect(deleteResponse.statusCode).toBe(204);
+
+    // task should not found
+    const getResponse = await request(app)
+      .get(`/api/tasks/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(getResponse.statusCode).toBe(404);
   });
 
   test('should return 404 status and not found message when task is not found', async () => {
@@ -136,7 +152,17 @@ describe('PUT /tasks/id', () => {
     expect(response.body).toMatchObject({ task });
   });
 
-  test('should validates update task request body', async () => {});
+  test('should validates update task request body', async () => {
+    const token = generateUserToken(user1._id);
+    const response = await request(app)
+      .post('/api/tasks')
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+    expect(response.status).toBe(422);
+    expect(response.body).toMatchObject({
+      message: 'The given data was invalid',
+    });
+  });
 
   test('should return 404 status and not found message when task is not found', async () => {
     const id = new mongoose.Types.ObjectId();
