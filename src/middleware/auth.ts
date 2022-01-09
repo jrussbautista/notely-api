@@ -12,14 +12,18 @@ export const checkAuth = async (req: Request, res: Response, next: NextFunction)
     return res.status(401).json({ message: 'Unauthorized.' });
   }
 
-  const decoded = verifyToken(token, `${process.env.JWT_SECRET_KEY}`) as { userId: string };
+  try {
+    const decoded = verifyToken(token, `${process.env.JWT_SECRET_KEY}`) as { userId: string };
 
-  const user = await User.findById(decoded.userId);
-  if (!user) {
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(401).json({ message: 'Unauthorized.' });
+    }
+
+    req.user = user;
+    res.locals.user = user;
+    next();
+  } catch (error) {
     return res.status(401).json({ message: 'Unauthorized.' });
   }
-
-  req.user = user;
-  res.locals.user = user;
-  next();
 };
