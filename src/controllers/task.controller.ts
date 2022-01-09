@@ -6,7 +6,7 @@ export const getTasks = async (req: Request, res: Response) => {
   try {
     const { user } = req;
     const tasks = await Task.find({ user: user._id });
-    res.status(200).json({ data: tasks });
+    res.status(200).json({ tasks });
   } catch (error) {
     res.status(500).json({ message: 'Unexpected error occurred' });
   }

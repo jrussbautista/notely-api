@@ -11,7 +11,7 @@ describe('GET /tasks', () => {
     const token = generateUserToken(user1._id);
     const response = await request(app).get(`/api/tasks`).set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
-    expect(response.body.data.length).toBe(2);
+    expect(response.body.tasks.length).toBe(2);
   });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
