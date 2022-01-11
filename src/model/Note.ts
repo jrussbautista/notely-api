@@ -1,13 +1,12 @@
 import { Schema, model } from 'mongoose';
-import { Task as TaskType } from '../types/Task';
+import { Note as NoteType } from '../types/Note';
 
 const { ObjectId } = Schema.Types;
 
-const TaskSchema = new Schema<TaskType>(
+const NoteSchema = new Schema<NoteType>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
-    completed: { type: Boolean, default: false },
     user: {
       type: ObjectId,
       ref: 'User',
@@ -18,4 +17,4 @@ const TaskSchema = new Schema<TaskType>(
   }
 );
 
-export const Task = model<TaskType>('Task', TaskSchema);
+export const Note = model<NoteType>('Note', NoteSchema);

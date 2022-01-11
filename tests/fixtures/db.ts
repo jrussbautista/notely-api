@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 import { User } from '../../src/model/User';
-import { Task } from '../../src/model/Task';
+import { Note } from '../../src/model/Note';
 import { connectDb } from '../../src/db/connect-db';
 import { User as UserType } from '../../src/types/User';
 import { generateToken } from '../../src/lib/jwt';
@@ -24,19 +24,17 @@ export const user2: UserWithPassword = {
   password: 'password',
 };
 
-export const user1Task1 = {
+export const user1Note1 = {
   _id: new mongoose.Types.ObjectId(),
-  title: 'First task',
-  description: 'First task desc',
-  completed: false,
+  title: 'First note',
+  description: 'First note desc',
   user: user1._id,
 };
 
-export const user1Task2 = {
+export const user1Note2 = {
   _id: new mongoose.Types.ObjectId(),
-  title: 'Second task',
-  description: 'First task desc',
-  completed: true,
+  title: 'Second note',
+  description: 'First note desc',
   user: user1._id,
 };
 
@@ -46,9 +44,9 @@ export const generateUserToken = (userId: string) =>
 export const setupTestDatabase = async () => {
   await connectDb();
   await User.deleteMany();
-  await Task.deleteMany();
+  await Note.deleteMany();
   await new User(user1).save();
   await new User(user2).save();
-  await new Task(user1Task1).save();
-  await new Task(user1Task2).save();
+  await new Note(user1Note1).save();
+  await new Note(user1Note2).save();
 };

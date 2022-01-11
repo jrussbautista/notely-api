@@ -3,7 +3,7 @@ import Joi from 'joi';
 
 import validateRequest from '../utils/validate-request';
 
-export const taskValidation = (req: Request, res: Response, next: NextFunction) => {
+export const notesValidation = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string().required(),
