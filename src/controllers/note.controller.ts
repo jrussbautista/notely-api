@@ -13,6 +13,16 @@ export const getNotes = async (req: Request, res: Response) => {
   }
 };
 
+export const getTrashNotes = async (req: Request, res: Response) => {
+  try {
+    const { user } = req;
+    const notes = await Note.find({ user: user._id, deletedAt: { $ne: null } });
+    res.status(200).json({ notes });
+  } catch (error) {
+    res.status(500).json({ message: 'Unexpected error occurred' });
+  }
+};
+
 export const getNote = async (req: Request, res: Response) => {
   try {
     const { user } = req;
