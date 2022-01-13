@@ -142,8 +142,7 @@ describe('DELETE /notes/id', () => {
     const response = await request(app)
       .delete(`/api/notes/${id}`)
       .set('Authorization', `Bearer ${token}`);
-    expect(response.statusCode).toBe(401);
-    expect(response.body).toMatchObject({ message: 'Unauthorized.' });
+    expect(response.statusCode).toBe(404);
   });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
@@ -209,8 +208,7 @@ describe('PUT /notes/id', () => {
       .set('Authorization', `Bearer ${token}`)
       .send(note);
 
-    expect(response.statusCode).toBe(401);
-    expect(response.body).toMatchObject({ message: 'Unauthorized.' });
+    expect(response.statusCode).toBe(404);
   });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {
