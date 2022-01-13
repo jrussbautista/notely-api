@@ -106,8 +106,7 @@ describe('GET /notes/id', () => {
     const response = await request(app)
       .get(`/api/notes/${id}`)
       .set('Authorization', `Bearer ${token}`);
-    expect(response.statusCode).toBe(401);
-    expect(response.body).toMatchObject({ message: 'Unauthorized.' });
+    expect(response.statusCode).toBe(404);
   });
 
   test('should return 401 status and unauthorized message if user is not authenticated', async () => {

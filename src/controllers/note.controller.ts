@@ -16,14 +16,10 @@ export const getNote = async (req: Request, res: Response) => {
   try {
     const { user } = req;
     const { id } = req.params;
-    const note = await Note.findOne({ _id: id });
+    const note = await Note.findOne({ _id: id, user });
 
     if (!note) {
       return res.status(404).json({ message: 'Note not found.' });
-    }
-
-    if (user._id.toString() !== note?.user._id.toString()) {
-      return res.status(401).json({ message: 'Unauthorized.' });
     }
 
     res.status(200).json({ note });
