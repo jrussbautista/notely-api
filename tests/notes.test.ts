@@ -2,7 +2,14 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 
 import app from '../src/app';
-import { setupTestDatabase, user1, user2, generateUserToken, user1Note1 } from './fixtures/db';
+import {
+  setupTestDatabase,
+  user1,
+  user2,
+  generateUserToken,
+  user1Note1,
+  user1Note2,
+} from './fixtures/db';
 
 beforeEach(setupTestDatabase);
 
@@ -156,6 +163,7 @@ describe('DELETE /notes/id', () => {
 describe('PUT /notes/id', () => {
   test('should update user note', async () => {
     const note = {
+      ...user1Note1,
       title: 'New note',
       description: 'new note desc',
     };
@@ -164,7 +172,9 @@ describe('PUT /notes/id', () => {
       .put(`/api/notes/${user1Note1._id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(note);
+
     expect(response.status).toBe(202);
+    expect(response.body.note._id).toBe(user1Note1._id.toString());
     expect(response.body).toMatchObject({ note });
   });
 
@@ -207,7 +217,6 @@ describe('PUT /notes/id', () => {
       .put(`/api/notes/${id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(note);
-
     expect(response.statusCode).toBe(404);
   });
 
