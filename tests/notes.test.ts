@@ -2,14 +2,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 
 import app from '../src/app';
-import {
-  setupTestDatabase,
-  user1,
-  user2,
-  generateUserToken,
-  user1Note1,
-  user1Note2,
-} from './fixtures/db';
+import { setupTestDatabase, user1, user2, generateUserToken, user1Note1 } from './fixtures/db';
 
 beforeEach(setupTestDatabase);
 
