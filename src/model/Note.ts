@@ -12,6 +12,7 @@ const NoteSchema = new Schema<NoteType>(
       ref: 'User',
     },
     deletedAt: { type: Date, default: null },
+    isFavorite: { type: Boolean, default: false },
   },
   {
     timestamps: true,
