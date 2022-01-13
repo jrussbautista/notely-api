@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { Note as NoteType } from '../types/Note';
 
-const { ObjectId } = Schema.Types;
+const { ObjectId, Date } = Schema.Types;
 
 const NoteSchema = new Schema<NoteType>(
   {
@@ -11,6 +11,7 @@ const NoteSchema = new Schema<NoteType>(
       type: ObjectId,
       ref: 'User',
     },
+    deletedAt: { type: Date, default: null },
   },
   {
     timestamps: true,

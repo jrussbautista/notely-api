@@ -6,5 +6,6 @@ export type Note = {
   description: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt: Date | null;
   user: User;
 };

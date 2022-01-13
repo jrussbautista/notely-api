@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
+import {} from 'mongoose';
 
 import { Note } from '../model/Note';
 
 export const getNotes = async (req: Request, res: Response) => {
   try {
     const { user } = req;
-    const notes = await Note.find({ user: user._id });
+    const notes = await Note.find({ user: user._id, deletedAt: null });
     res.status(200).json({ notes });
   } catch (error) {
     res.status(500).json({ message: 'Unexpected error occurred' });
@@ -16,7 +17,7 @@ export const getNote = async (req: Request, res: Response) => {
   try {
     const { user } = req;
     const { id } = req.params;
-    const note = await Note.findById(id);
+    const note = await Note.findOne({ _id: id });
 
     if (!note) {
       return res.status(404).json({ message: 'Note not found.' });
@@ -63,7 +64,7 @@ export const deleteNote = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Unauthorized.' });
     }
 
-    await note.remove();
+    await Note.findOneAndUpdate({ id }, { deletedAt: new Date() });
 
     res.status(204).send();
   } catch (error) {

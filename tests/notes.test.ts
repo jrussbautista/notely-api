@@ -106,7 +106,8 @@ describe('DELETE /notes/id', () => {
     const getResponse = await request(app)
       .get(`/api/notes/${id}`)
       .set('Authorization', `Bearer ${token}`);
-    expect(getResponse.statusCode).toBe(404);
+    expect(getResponse.statusCode).toBe(200);
+    expect(getResponse.body.deletedAt).not.toBeNull();
   });
 
   test('should return 404 status and not found message when note is not found', async () => {
