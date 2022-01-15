@@ -5,7 +5,21 @@ import { Note } from '../model/Note';
 export const getNotes = async (req: Request, res: Response) => {
   try {
     const { user } = req;
-    const notes = await Note.find({ user: user._id, deletedAt: null });
+    const { list } = req.query;
+
+    const query: Record<string, any> = {
+      user: user._id,
+    };
+
+    if (list === 'favorites') {
+      query.isFavorite = true;
+    } else if (list === 'trash') {
+      query.deletedAt = { $ne: null };
+    } else {
+      query.deletedAt = null;
+    }
+
+    const notes = await Note.find(query);
     res.status(200).json({ notes });
   } catch (error) {
     res.status(500).json({ message: 'Unexpected error occurred' });
