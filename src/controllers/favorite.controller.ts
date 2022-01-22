@@ -22,7 +22,11 @@ export const toggleFavoriteNote = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Note not found.' });
     }
 
-    note = await Note.findOneAndUpdate({ id }, { isFavorite: !note?.isFavorite }, { new: true });
+    note = await Note.findOneAndUpdate(
+      { _id: id },
+      { isFavorite: !note?.isFavorite },
+      { new: true }
+    );
 
     res.status(200).json({ note });
   } catch (error) {
