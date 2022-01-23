@@ -1,10 +1,10 @@
-## Task Manager API
+## Notely API
 
 ### Installation
 
 ```
 git clone https://github.com/jrussumbrella/task-manager-api
-cd task-manager-api
+cd notely-api
 npm install
 ```
 
